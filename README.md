@@ -5,7 +5,7 @@
 ### Evidence-first document intelligence for historical Scottish property records
 
 <p>
-  <img src="https://img.shields.io/badge/tests-82%20passed-16a085?logo=pytest" alt="82 tests passed">
+  <img src="https://img.shields.io/badge/tests-85%20passed-16a085?logo=pytest" alt="85 tests passed">
   <img src="https://img.shields.io/badge/lint-ruff%20clean-4c9a2b" alt="Ruff clean">
   <img src="https://img.shields.io/badge/Python-3.11%2B-3776ab?logo=python&logoColor=white" alt="Python 3.11 or newer">
   <img src="https://img.shields.io/badge/status-research%20prototype-orange" alt="Research prototype">
@@ -176,6 +176,63 @@ Every field is represented as an evidence-bearing candidate. A simplified exampl
 ```
 
 The top-level extraction includes document type/date, parties, property description, places, rights, burdens, servitudes, title references, map references, source pages, review state and metadata about every provider used.
+
+### Real title-register example
+
+This is a real sample image processed locally through the application with
+Tesseract OCR, labelled title-sheet rules and evidence-preserving validation.
+The image is included only as a demonstrator fixture; confirm that you have the
+right to redistribute any real records used in your own corpus.
+
+<div align="center">
+  <img src="docs/assets/title-register-sample.jpg" alt="Registers of Scotland title-register sample" width="520">
+  <br>
+  <sub>Source document: title-register sample used for the local extraction demonstration.</sub>
+</div>
+
+The corresponding structured result promotes the fields that can be read from
+the page and keeps their evidence, method and confidence visible:
+
+| Extracted field | Result | Method | Confidence / review meaning |
+| --- | --- | --- | --- |
+| Document type | `title_sheet` | document classifier | Recognized as a title-sheet layout |
+| Title reference | `MID113689` | regex | 75%; exact text found on page 1 |
+| Proprietor | `DAT LYNCH INVESTMENTS PTY LTD` | labelled OCR/rules | Candidate; requires human confirmation |
+| Property description | `FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL` | description section parser | Evidence linked to the Description section |
+| Registration dates | `06/05/2015`, `13/02/2008`, `12/12/2013`, `15/11/2013` | labelled/date OCR rules | Kept as separate dates; not collapsed into one arbitrary date |
+| Consideration | `£190,000` | currency regex | Evidence linked to the proprietorship entry |
+| Map reference | `NT2473SE` | focused crop OCR | Small-print candidate; review required |
+
+In JSON, the same result is represented as reviewable fields rather than a
+single untraceable answer:
+
+```json
+{
+  "document_type": "title_sheet",
+  "title_references": [{
+    "value": "MID113689",
+    "method": "regex",
+    "confidence": 0.75,
+    "evidence": [{"page": 1, "text": "MID113689"}]
+  }],
+  "property_description": {
+    "value": "Subjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL ...",
+    "method": "labelled_regex",
+    "evidence": [{"page": 1, "text": "Description: Subjects FLAT 2 ..."}]
+  },
+  "consideration": {"value": "£190,000", "method": "regex"},
+  "map_references": [{
+    "value": "NT2473SE",
+    "method": "labelled_crop_ocr",
+    "confidence": 0.78
+  }],
+  "review_required": true
+}
+```
+
+The application deliberately keeps `review_required: true`: extracted values
+assist research and triage, but they are not authoritative proof of ownership,
+title or legal rights.
 
 ### Sample data to structured result
 
