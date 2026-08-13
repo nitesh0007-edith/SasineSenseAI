@@ -133,6 +133,10 @@ def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
         result.title_references = _dedupe_fields(flat_regex["title_references"])
     if not result.map_references:
         result.map_references = _dedupe_fields(flat_map_references)
+    if result.consideration is None and flat_regex["money"]:
+        result.consideration = _dedupe_fields(flat_regex["money"])[0].model_copy(
+            update={"name": "consideration"}
+        )
 
     if not result.parties and deterministic_type != "title_sheet":
         for entity in entity_candidates:
@@ -179,6 +183,8 @@ def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
     field_confidences += [p.confidence for p in result.map_references]
     if result.document_date is not None:
         field_confidences.append(result.document_date.confidence)
+    if result.consideration is not None:
+        field_confidences.append(result.consideration.confidence)
     overall = round(sum(field_confidences) / len(field_confidences), 4) if field_confidences else 0.0
     result.overall_confidence = overall
     result.review_required = any(review_flags) or review_required(overall)

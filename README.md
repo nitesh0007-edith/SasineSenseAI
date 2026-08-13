@@ -222,6 +222,33 @@ python -m ruff check .
 
 Current baseline: **82 tests passed, 1 skipped** and Ruff clean. The skipped test covers graceful behavior when the optional system Tesseract binary is unavailable.
 
+### Batch processing an authorized corpus
+
+Place authorized PDF/TIFF/image records in a local folder. The batch runner
+does not download or discover archive records; it processes only files you have
+permission to use and writes one auditable JSON object per line:
+
+```bash
+python -m app.batch.run \
+  --input-dir ./data/source_records \
+  --output ./data/derived/batch/results.jsonl \
+  --ocr tesseract \
+  --structured mesh
+```
+
+For a dry local trial without database writes:
+
+```bash
+python -m app.batch.run \
+  --input-dir ./data/source_records \
+  --output ./data/derived/batch/results.jsonl \
+  --no-persist --ocr tesseract --structured mock
+```
+
+The runner uses content-stable document IDs, continues after individual file
+errors, records failed files in the same JSONL output, and preserves provider,
+confidence, evidence and review metadata for every successful extraction.
+
 ## Configuration
 
 Providers are selected in `.env`:
@@ -269,6 +296,7 @@ Reports are written to `data/derived/eval/baseline_comparison.csv` and `.md`. Th
 
 ```text
 app/
+├── batch/        authorized-folder batch runner and JSONL export
 ├── api/          FastAPI endpoints
 ├── core/         settings and configuration
 ├── db/           SQLAlchemy models and repository

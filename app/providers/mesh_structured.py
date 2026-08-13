@@ -59,6 +59,7 @@ SYSTEM_PROMPT = (
     '"granter","grantee","unknown"], "evidence": string}],\n'
     '  "places": [{"name": string, "evidence": string}],\n'
     '  "property_description": {"value": string, "evidence": string} | null,\n'
+    '  "consideration": {"value": string, "evidence": string} | null,\n'
     '  "title_references": [{"value": string, "evidence": string}]\n'
     "}\n"
 )
@@ -270,6 +271,17 @@ class MeshStructuredExtractionProvider:
                 evidence=evidence(raw_desc.get("evidence")),
             )
 
+        consideration = None
+        raw_consideration = data.get("consideration")
+        if isinstance(raw_consideration, dict) and raw_consideration.get("value"):
+            consideration = ExtractedField(
+                name="consideration",
+                value=str(raw_consideration["value"]),
+                confidence=0.5,
+                method="mesh_vlm",
+                evidence=evidence(raw_consideration.get("evidence")),
+            )
+
         title_references: list[ExtractedField] = []
         for item in data.get("title_references") or []:
             if not isinstance(item, dict) or not item.get("value"):
@@ -290,6 +302,7 @@ class MeshStructuredExtractionProvider:
             document_date=document_date,
             parties=parties,
             property_description=property_description,
+            consideration=consideration,
             places=places,
             title_references=title_references,
             source_pages=[page],

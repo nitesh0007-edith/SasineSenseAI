@@ -104,6 +104,14 @@ if uploaded:
                         st.caption(f"Evidence (p{span['page']}): “{span['text']}”")
                     _field_reviewer(document_id, "document_date", date["value"])
 
+                consideration = result.get("consideration")
+                if consideration:
+                    st.markdown("**Consideration / price**")
+                    st.write(f"{consideration['value']} (confidence {consideration['confidence']})")
+                    for span in consideration.get("evidence", []):
+                        st.caption(f"Evidence (p{span['page']}): “{span['text']}”")
+                    _field_reviewer(document_id, "consideration", consideration["value"])
+
                 if result.get("parties"):
                     st.markdown("**Parties**")
                     for i, party in enumerate(result["parties"]):

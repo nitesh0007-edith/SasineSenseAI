@@ -85,6 +85,7 @@ class PropertyRecordExtraction(BaseModel):
     document_date: ExtractedField | None = None
     parties: list[Party] = Field(default_factory=list)
     property_description: ExtractedField | None = None
+    consideration: ExtractedField | None = None
     places: list[PlaceCandidate] = Field(default_factory=list)
     rights: list[ExtractedField] = Field(default_factory=list)
     burdens: list[ExtractedField] = Field(default_factory=list)
