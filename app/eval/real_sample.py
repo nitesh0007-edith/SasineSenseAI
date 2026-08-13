@@ -128,6 +128,36 @@ def run_hybrid(input_path: Path) -> dict[str, Any]:
     return {"status": "completed", "provider": "tesseract + rules + spaCy + local hybrid", **result.model_dump(mode="json")}
 
 
+def run_mesh(input_path: Path) -> dict[str, Any]:
+    """Run the real Mesh provider when a fresh key is configured."""
+    if not settings.structured_api_key:
+        return {
+            "status": "not_configured",
+            "provider": "Mesh VLM",
+            "message": "Set MESH_API_KEY in the process environment; never commit it.",
+        }
+    old_ocr, old_structured = settings.ocr_provider, settings.structured_extraction_provider
+    settings.ocr_provider = "tesseract"
+    settings.structured_extraction_provider = "mesh"
+    try:
+        result = run_pipeline("real_sample_mesh", str(input_path))
+    except Exception as exc:
+        return {
+            "status": "failed",
+            "provider": "Mesh VLM",
+            "model": settings.structured_api_model,
+            "message": f"{type(exc).__name__}: {exc}",
+        }
+    finally:
+        settings.ocr_provider = old_ocr
+        settings.structured_extraction_provider = old_structured
+    return {
+        "status": "completed",
+        "provider": "Tesseract + Mesh VLM + local validation",
+        **result.model_dump(mode="json"),
+    }
+
+
 def run_openai_compatible(name: str, base_url: str | None, model: str | None, input_path: Path) -> dict[str, Any]:
     if not base_url or not model:
         return {"status": "not_configured", "provider": name, "message": "Endpoint and model were not supplied."}
@@ -207,7 +237,7 @@ def main() -> None:
     results["hybrid_local"] = run_hybrid(args.input)
     results["mesh_vlm"] = {"status": "not_run", "provider": "Mesh VLM", "message": "Use --mesh with configured Mesh credentials."}
     if args.mesh:
-        results["mesh_vlm"] = run_openai_compatible("Mesh VLM", settings.structured_api_base, settings.structured_api_model, args.input)
+        results["mesh_vlm"] = run_mesh(args.input)
     results["vllm"] = run_openai_compatible("vLLM", args.vllm_base_url, args.vllm_model, args.input)
     write_report(results, args.out, args.input)
     print(json.dumps({name: result.get("status") for name, result in results.items()}, indent=2))
