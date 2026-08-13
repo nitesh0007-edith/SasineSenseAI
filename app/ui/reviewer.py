@@ -309,13 +309,20 @@ def main() -> None:
         consideration = result.get("consideration")
         if consideration:
             _render_field(document_id, consideration, "consideration", "Consideration / price")
+        description = result.get("property_description")
+        if description:
+            _render_field(document_id, description, "property_description", "Property description")
+        for index, registration_date in enumerate(result.get("registration_dates", [])):
+            _render_field(document_id, registration_date, f"registration_date_{index}", "Registration date")
         for index, party in enumerate(result.get("parties", [])):
             _render_party(document_id, party, index)
         for index, place in enumerate(result.get("places", [])):
             _render_place(document_id, place, index)
         for index, field in enumerate(result.get("title_references", [])):
             _render_field(document_id, field, f"title_reference_{index}", "Title reference")
-        if not any((date, consideration, result.get("parties"), result.get("places"), result.get("title_references"))):
+        for index, field in enumerate(result.get("map_references", [])):
+            _render_field(document_id, field, f"map_reference_{index}", "Map reference")
+        if not any((date, consideration, description, result.get("registration_dates"), result.get("parties"), result.get("places"), result.get("title_references"), result.get("map_references"))):
             st.markdown('<div class="empty-state"><div class="empty-icon">?</div><b>No supported fields found</b><br/><span>The document needs classification or manual review. No values were invented.</span></div>', unsafe_allow_html=True)
 
     st.markdown('<div class="section-title">Audit & provenance</div>', unsafe_allow_html=True)

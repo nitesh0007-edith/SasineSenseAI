@@ -83,6 +83,7 @@ class PropertyRecordExtraction(BaseModel):
         "unknown",
     ] = "unknown"
     document_date: ExtractedField | None = None
+    registration_dates: list[ExtractedField] = Field(default_factory=list)
     parties: list[Party] = Field(default_factory=list)
     property_description: ExtractedField | None = None
     consideration: ExtractedField | None = None

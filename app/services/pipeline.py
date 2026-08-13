@@ -11,10 +11,17 @@ All extracted values keep evidence; conflicting candidates are preserved in
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from app.core.config import settings
-from app.models.schemas import Party, PlaceCandidate, PropertyRecordExtraction
+from app.models.schemas import (
+    EvidenceSpan,
+    ExtractedField,
+    Party,
+    PlaceCandidate,
+    PropertyRecordExtraction,
+)
 from app.providers.factory import (
     get_ner_provider,
     get_ocr_provider,
@@ -24,7 +31,14 @@ from app.providers.factory import (
 from app.services.merge import merge_field_candidates
 from app.services.preprocessing import PreprocessConfig, preprocess_image
 from app.services.rendering import render_document
-from app.services.rules import classify_document_type, extract_all, extract_map_references
+from app.services.rules import (
+    classify_document_type,
+    extract_all,
+    extract_map_references,
+    extract_property_description,
+    extract_proprietor,
+    extract_title_sheet_dates,
+)
 from app.services.validation import (
     compute_confidence,
     review_required,
@@ -45,6 +59,40 @@ def _dedupe_fields(fields):
         evidence = existing.evidence + [span for span in field.evidence if span not in existing.evidence]
         by_value[key] = existing.model_copy(update={"evidence": evidence})
     return list(by_value.values())
+
+
+def _map_reference_from_title_image(image_path: Path, page_number: int) -> ExtractedField | None:
+    """Use a focused, enlarged OCR pass for small title-sheet map references."""
+    try:
+        import pytesseract
+        from PIL import Image, ImageEnhance
+
+        with Image.open(image_path) as image:
+            crop = image.crop((0, 0, image.width, int(image.height * 0.52)))
+            crop = crop.resize((crop.width * 4, crop.height * 4))
+            crop = ImageEnhance.Contrast(crop).enhance(2.0)
+            text = pytesseract.image_to_string(crop, config="--psm 6")
+    except Exception:
+        return None
+    match = re.search(r"\b[A-Z]{2}\d{4}[A-Z]{2}\b", text, re.I)
+    if not match:
+        return None
+    value = match.group(0).upper()
+    return ExtractedField(
+        name="map_reference",
+        value=value,
+        normalized_value=value,
+        confidence=0.78,
+        method="labelled_crop_ocr",
+        evidence=[
+            EvidenceSpan(
+                page=page_number,
+                text=f"Map Reference: {value}",
+                bbox=None,
+                source="title_sheet_crop_ocr",
+            )
+        ],
+    )
 
 
 def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
@@ -129,6 +177,43 @@ def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
     }
     map_candidates = [extract_map_references(page) for page in ocr_pages]
     flat_map_references = [field for page in map_candidates for field in page]
+    if deterministic_type == "title_sheet" and not flat_map_references:
+        for rendered_page, image_path in zip(rendered_pages, page_images, strict=True):
+            candidate = _map_reference_from_title_image(image_path, rendered_page.page_number)
+            if candidate:
+                flat_map_references.append(candidate)
+                break
+    labelled_dates = [
+        field for page in ocr_pages for field in extract_title_sheet_dates(page)
+    ]
+    if deterministic_type == "title_sheet":
+        observed_dates = [field for page in regex_by_page for field in page["dates"]]
+        labelled_keys = {
+            str(field.normalized_value or field.value).casefold() for field in labelled_dates
+        }
+        unlabelled_dates = [
+            field.model_copy(update={"name": "title_sheet_date", "confidence": 0.55})
+            for field in observed_dates
+            if str(field.normalized_value or field.value).casefold() not in labelled_keys
+        ]
+        result.registration_dates = _dedupe_fields(labelled_dates + unlabelled_dates)
+        if result.property_description is None:
+            descriptions = [extract_property_description(page) for page in ocr_pages]
+            result.property_description = next(
+                (description for description in descriptions if description is not None), None
+            )
+        if not result.parties:
+            proprietors = [extract_proprietor(page) for page in ocr_pages]
+            proprietor = next((candidate for candidate in proprietors if candidate), None)
+            if proprietor:
+                result.parties = [
+                    Party(
+                        name=str(proprietor.value),
+                        role="owner",
+                        confidence=proprietor.confidence,
+                        evidence=proprietor.evidence,
+                    )
+                ]
     if not result.title_references:
         result.title_references = _dedupe_fields(flat_regex["title_references"])
     if not result.map_references:
@@ -179,6 +264,7 @@ def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
     # Aggregate confidence + review routing (Phase 8).
     field_confidences = [p.confidence for p in result.parties]
     field_confidences += [p.confidence for p in result.places]
+    field_confidences += [p.confidence for p in result.registration_dates]
     field_confidences += [p.confidence for p in result.title_references]
     field_confidences += [p.confidence for p in result.map_references]
     if result.document_date is not None:

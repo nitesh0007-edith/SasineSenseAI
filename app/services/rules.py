@@ -18,6 +18,13 @@ DATE_PATTERNS = [
 NUMERIC_DATE_PATTERN = re.compile(
     r"\b(?P<day>\d{1,2})/(?P<month>\d{1,2})/(?P<year>\d{4})\b"
 )
+TITLE_DATE_LABEL_PATTERN = re.compile(
+    r"(?P<label>search\s+summary\s+date|date\s+of\s+first\s+registration|"
+    r"date\s+title\s+sheet\s+updated|date\s+land\s+certificate\s+updated|"
+    r"date\s+of\s+registration|date\s+of\s+entry)"
+    r"[^\n]{0,90}?(?P<date>\d{1,2}/\d{1,2}/\d{4})",
+    re.I,
+)
 
 MONTHS = {
     "jan": 1,
@@ -153,6 +160,87 @@ def extract_dates(page: OCRPageResult) -> list[ExtractedField]:
     return results
 
 
+def extract_title_sheet_dates(page: OCRPageResult) -> list[ExtractedField]:
+    """Extract labelled title-sheet dates without choosing one as document date."""
+    results: list[ExtractedField] = []
+    for match in TITLE_DATE_LABEL_PATTERN.finditer(page.text):
+        raw = match.group("date")
+        try:
+            day, month, year = (int(part) for part in raw.split("/"))
+            normalized = date(year, month, day).isoformat()
+        except ValueError:
+            normalized = None
+        results.append(
+            ExtractedField(
+                name="registration_date",
+                value=raw,
+                normalized_value=normalized,
+                confidence=0.78 if normalized else 0.45,
+                method="labelled_regex",
+                evidence=[
+                    EvidenceSpan(
+                        page=page.page,
+                        text=match.group(0).strip(),
+                        bbox=None,
+                        source="ocr_text",
+                    )
+                ],
+            )
+        )
+    return results
+
+
+def extract_property_description(page: OCRPageResult) -> ExtractedField | None:
+    match = re.search(
+        r"description\s*:\s*(?P<value>.*?)(?=\n\s*this\s+is\s+a\s+plain|\n\s*[A-Z][,.]\s+PROPRIETORSHIP|\Z)",
+        page.text,
+        re.I | re.S,
+    )
+    if not match:
+        return None
+    value = " ".join(match.group("value").split())
+    if not value:
+        return None
+    return ExtractedField(
+        name="property_description",
+        value=value,
+        normalized_value=value,
+        confidence=0.72,
+        method="labelled_regex",
+        evidence=[
+            EvidenceSpan(page=page.page, text=match.group(0).strip(), bbox=None, source="ocr_text")
+        ],
+    )
+
+
+def extract_proprietor(page: OCRPageResult) -> ExtractedField | None:
+    match = re.search(
+        r"proprietorship\s+section(?P<section>.*?)(?=\n\s*notes\s*:|\Z)",
+        page.text,
+        re.I | re.S,
+    )
+    if not match:
+        return None
+    section = match.group("section")
+    owner = re.search(
+        r"(?im)^\s*(?P<owner>[A-Z][A-Z0-9 &.,'’-]{4,}\b(?:PTY\s+LTD|LTD|LIMITED|PLC|INC(?:ORPORATED)?))\b",
+        section,
+    )
+    if not owner:
+        return None
+    value = " ".join(owner.group("owner").split())
+    return ExtractedField(
+        name="proprietor",
+        value=value,
+        normalized_value=value,
+        confidence=0.62,
+        method="labelled_regex",
+        evidence=[
+            EvidenceSpan(page=page.page, text=section.strip(), bbox=None, source="ocr_text")
+        ],
+    )
+
+
 def _fields_from_pattern(
     page: OCRPageResult,
     pattern: re.Pattern[str],
@@ -207,9 +295,36 @@ MAP_REFERENCE_PATTERN = re.compile(r"\b[A-Z]{2}\d{4}[A-Z]{2}\b", re.I)
 
 
 def extract_map_references(page: OCRPageResult) -> list[ExtractedField]:
-    return _fields_from_pattern(
+    exact = _fields_from_pattern(
         page, MAP_REFERENCE_PATTERN, name="map_reference", confidence=0.75
     )
+    if exact:
+        return exact
+    labelled = re.search(
+        r"(?:map\s+reference|map\s+ref(?:erence)?)\s*:?\s*(?P<value>[A-Z0-9]{6,10})",
+        page.text,
+        re.I,
+    )
+    if not labelled:
+        return []
+    value = labelled.group("value")
+    return [
+        ExtractedField(
+            name="map_reference",
+            value=value,
+            normalized_value=value.upper(),
+            confidence=0.45,
+            method="labelled_regex_uncertain",
+            evidence=[
+                EvidenceSpan(
+                    page=page.page,
+                    text=labelled.group(0),
+                    bbox=None,
+                    source="ocr_text",
+                )
+            ],
+        )
+    ]
 
 
 def extract_reference_numbers(page: OCRPageResult) -> list[ExtractedField]:

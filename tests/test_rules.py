@@ -7,8 +7,11 @@ from app.services.rules import (
     extract_deed_keywords,
     extract_money,
     extract_postcodes,
+    extract_property_description,
+    extract_proprietor,
     extract_reference_numbers,
     extract_title_references,
+    extract_title_sheet_dates,
 )
 
 
@@ -77,3 +80,18 @@ def test_extract_all_keys():
         "reference_numbers",
         "deed_keywords",
     }
+
+
+def test_title_sheet_labelled_fields():
+    page = _page(
+        "Date of First Registration: 13/02/2008\n"
+        "Description:\nSubjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL\n"
+        "B. PROPRIETORSHIP SECTION\nD&T LYNCH INVESTMENTS PTY LTD\nNotes:"
+    )
+    dates = extract_title_sheet_dates(page)
+    description = extract_property_description(page)
+    proprietor = extract_proprietor(page)
+
+    assert dates[0].normalized_value == "2008-02-13"
+    assert "CASTLE TERRACE" in description.value
+    assert proprietor.value == "D&T LYNCH INVESTMENTS PTY LTD"
