@@ -1,0 +1,29 @@
+# Secrets / local config — NEVER commit
+.env
+.env.*
+!.env.example
+
+# Data (may contain sensitive/copyrighted source documents)
+data/uploads/
+data/rendered/
+data/derived/
+data/raw/
+data/annotations/*.jsonl
+!data/annotations/sample_gold.jsonl
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# OS
+.DS_Store

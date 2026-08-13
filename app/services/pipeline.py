@@ -1,0 +1,142 @@
+"""Hybrid extraction pipeline (wires Phases 1–9 together).
+
+Flow: render -> optional preprocess -> OCR -> regex + NER candidates ->
+structured (mock VLM) -> merge candidates -> validate + score -> resolve places
+-> route review. Providers are chosen via the factory (config-driven), so no
+concrete OCR/NER/VLM implementation is hard-wired into this business logic.
+
+All extracted values keep evidence; conflicting candidates are preserved in
+``metadata`` rather than dropped. Outputs remain non-authoritative.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from app.core.config import settings
+from app.models.schemas import PropertyRecordExtraction
+from app.providers.factory import (
+    get_ner_provider,
+    get_ocr_provider,
+    get_place_resolver,
+    get_structured_provider,
+)
+from app.services.merge import merge_field_candidates
+from app.services.preprocessing import PreprocessConfig, preprocess_image
+from app.services.rendering import render_document
+from app.services.rules import classify_document_type, extract_all
+from app.services.validation import (
+    compute_confidence,
+    review_required,
+    route_review,
+    validate_field,
+)
+
+
+def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
+    path = Path(local_path)
+    rendered_pages = render_document(path, document_id=document_id)
+    page_images = [Path(page.local_image_path) for page in rendered_pages]
+
+    # Phase 2 — optional preprocessing (non-destructive; toggled by config).
+    preprocess_ops: list[str] = []
+    if settings.preprocess_enabled:
+        cfg = PreprocessConfig.from_settings()
+        processed: list[Path] = []
+        for image_path in page_images:
+            result = preprocess_image(image_path, config=cfg)
+            processed.append(Path(result.processed_image_path))
+            preprocess_ops = result.operations
+        page_images = processed
+
+    # Phase 3 — OCR (provider selected by config).
+    ocr = get_ocr_provider()
+    ocr_pages = [
+        ocr.extract_page(image_path=image_path, page_number=page.page_number)
+        for image_path, page in zip(page_images, rendered_pages, strict=True)
+    ]
+
+    # Phase 4 & 5 — deterministic regex + NER candidates (evidence-bearing).
+    regex_by_page = [extract_all(p) for p in ocr_pages]
+    ner = get_ner_provider()
+    entity_candidates = [ent for p in ocr_pages for ent in ner.extract_entities(p)]
+
+    # Phase 7 — structured extraction (mock VLM by default).
+    structured = get_structured_provider()
+    result = structured.extract(
+        document_id=document_id,
+        ocr_pages=ocr_pages,
+        page_images=page_images,
+    )
+
+    combined_text = "\n".join(p.text for p in ocr_pages)
+    deterministic_type = classify_document_type(combined_text)
+    if deterministic_type != "unknown":
+        result.document_type = deterministic_type  # type: ignore[assignment]
+
+    # Phase 6.2 — merge date candidates from regex and the structured provider.
+    date_candidates = [c for page in regex_by_page for c in page["dates"]]
+    if result.document_date is not None:
+        date_candidates.append(result.document_date)
+    merged_date = merge_field_candidates("document_date", date_candidates)
+
+    review_flags: list[bool] = []
+    if merged_date.chosen is not None:
+        chosen = merged_date.chosen
+        validation = validate_field(chosen)
+        best_ocr = max(
+            (t.confidence for p in ocr_pages for t in p.tokens),
+            default=1.0,
+        )
+        confidence = compute_confidence(
+            chosen,
+            ocr_confidence=best_ocr,
+            agreement=merged_date.agreement,
+            validation=validation,
+        )
+        chosen = chosen.model_copy(update={"confidence": confidence, "validation": validation})
+        result.document_date = chosen
+        review_flags.append(review_required(confidence))
+
+    # Phase 9 — resolve places against the local gazetteer (ranked, non-forcing).
+    resolver = get_place_resolver()
+    for place in result.places:
+        matches = resolver.resolve(place.name, limit=3)
+        if matches:
+            top = matches[0]
+            place.normalized_name = top.normalized_name
+            place.admin_area = top.admin_area
+            place.latitude = top.latitude
+            place.longitude = top.longitude
+            place.confidence = max(place.confidence, top.confidence)
+        review_flags.append(review_required(place.confidence))
+
+    # Aggregate confidence + review routing (Phase 8).
+    field_confidences = [p.confidence for p in result.parties]
+    field_confidences += [p.confidence for p in result.places]
+    if result.document_date is not None:
+        field_confidences.append(result.document_date.confidence)
+    overall = round(sum(field_confidences) / len(field_confidences), 4) if field_confidences else 0.0
+    result.overall_confidence = overall
+    result.review_required = any(review_flags) or review_required(overall)
+    result.source_pages = [p.page for p in ocr_pages]
+
+    # Preserve all candidates and provenance rather than dropping conflicts.
+    result.metadata.update(
+        {
+            "ocr_provider": ocr.name,
+            "ner_provider": ner.name,
+            "structured_provider": structured.name,
+            "preprocess_operations": preprocess_ops,
+            "review_tier": route_review(overall),
+            "entity_candidate_count": len(entity_candidates),
+            "date_candidates": [c.model_dump(mode="json") for c in merged_date.candidates],
+            "date_conflict": merged_date.conflict,
+            "regex_candidates": {
+                key: [f.model_dump(mode="json") for page in regex_by_page for f in page[key]]
+                for key in ("money", "postcodes", "title_references", "reference_numbers")
+            },
+        }
+    )
+
+    return result

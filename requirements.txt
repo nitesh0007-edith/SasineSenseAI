@@ -1,0 +1,29 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.8
+pydantic-settings>=2.4
+python-multipart>=0.0.9
+PyMuPDF>=1.24
+Pillow>=10.4
+opencv-python-headless>=4.10
+numpy>=1.26
+spacy>=3.7
+dateparser>=1.2
+sqlalchemy>=2.0
+psycopg[binary]>=3.2
+streamlit>=1.37
+requests>=2.32
+pytest>=8.3
+httpx>=0.27
+ruff>=0.6
+
+# Real OCR backend (Phase 3.3). Also needs the system `tesseract` binary on PATH
+# (`brew install tesseract` / `apt-get install tesseract-ocr`); the adapter
+# degrades gracefully when absent.
+pytesseract>=0.3.10
+
+# Real structured extraction (Task 7.3) uses the Mesh API via `requests` (already
+# listed above) — no extra SDK required.
+
+# spaCy English model for statistical NER (Phase 5):
+#   python -m spacy download en_core_web_sm

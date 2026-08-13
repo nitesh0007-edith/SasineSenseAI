@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_DB: ros_ai
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ros_ai_pgdata:/var/lib/postgresql/data
+
+volumes:
+  ros_ai_pgdata:
