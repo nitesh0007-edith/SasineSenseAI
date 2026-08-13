@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="820" viewBox="0 0 1500 820" role="img" aria-labelledby="title desc">
+<title id="title">Sample structured extraction result</title>
+<desc id="desc">A visual mapping from a sample disposition annotation to an evidence-bearing structured result.</desc>
+<defs>
+  <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#081525"/><stop offset="1" stop-color="#123452"/></linearGradient>
+  <linearGradient id="card" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#183b58"/><stop offset="1" stop-color="#102c45"/></linearGradient>
+  <linearGradient id="result" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#123d45"/><stop offset="1" stop-color="#0d2d38"/></linearGradient>
+  <filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000" flood-opacity=".28"/></filter>
+  <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto"><path d="M0,0 L0,8 L11,4 z" fill="#65d9c2"/></marker>
+</defs>
+<rect width="1500" height="820" rx="28" fill="url(#background)"/>
+<text x="70" y="78" fill="#f5f9ff" font-family="Arial,sans-serif" font-size="32" font-weight="700">From sample data to a reviewable structured result</text>
+<text x="70" y="115" fill="#a9c4db" font-family="Arial,sans-serif" font-size="17">doc_sample_001 · disposition · evidence preserved at every field</text>
+<rect x="70" y="150" width="1360" height="2" fill="#2b5372"/>
+
+<g filter="url(#shadow)" font-family="Arial,sans-serif">
+  <rect x="70" y="195" width="400" height="525" rx="20" fill="url(#card)" stroke="#4c83aa" stroke-width="2"/>
+  <rect x="510" y="195" width="480" height="525" rx="20" fill="#102b43" stroke="#4c83aa" stroke-width="2"/>
+  <rect x="1030" y="195" width="400" height="525" rx="20" fill="url(#result)" stroke="#55d6be" stroke-width="2"/>
+</g>
+
+<g font-family="Arial,sans-serif">
+  <text x="105" y="245" fill="#7aa7ff" font-size="15" font-weight="700">SOURCE FIXTURE</text>
+  <text x="105" y="282" fill="#ffffff" font-size="22" font-weight="700">sample_gold.jsonl</text>
+  <text x="105" y="323" fill="#b8cce0" font-size="16">document_type</text><text x="360" y="323" text-anchor="end" fill="#ffffff" font-size="17">disposition</text>
+  <text x="105" y="365" fill="#b8cce0" font-size="16">document_date</text><text x="360" y="365" text-anchor="end" fill="#ffffff" font-size="17">1876-05-12</text>
+  <text x="105" y="407" fill="#b8cce0" font-size="16">parties</text><text x="360" y="407" text-anchor="end" fill="#ffffff" font-size="17">2</text>
+  <text x="105" y="449" fill="#b8cce0" font-size="16">places</text><text x="360" y="449" text-anchor="end" fill="#ffffff" font-size="17">Glasgow</text>
+  <rect x="105" y="492" width="330" height="1" fill="#3c627e"/>
+  <text x="105" y="535" fill="#8faec8" font-size="15">Evidence snippets</text>
+  <text x="105" y="570" fill="#dce9f5" font-size="15">“dated 12 May 1876”</text>
+  <text x="105" y="603" fill="#dce9f5" font-size="15">“by John Campbell”</text>
+  <text x="105" y="636" fill="#dce9f5" font-size="15">“in favour of Mary Fraser”</text>
+  <text x="105" y="669" fill="#dce9f5" font-size="15">“lands situated in Glasgow”</text>
+
+  <text x="545" y="245" fill="#55d6be" font-size="15" font-weight="700">PIPELINE ENRICHMENT</text>
+  <g fill="#dce9f5" font-size="17"><text x="555" y="300">1</text><text x="590" y="300">OCR text + token evidence</text><text x="555" y="370">2</text><text x="590" y="370">Regex date extraction</text><text x="555" y="440">3</text><text x="590" y="440">NER party candidates</text><text x="555" y="510">4</text><text x="590" y="510">Structured schema merge</text><text x="555" y="580">5</text><text x="590" y="580">Gazetteer place resolution</text></g>
+  <g fill="#8faec8" font-size="14"><text x="590" y="325">page 1 · source span retained</text><text x="590" y="395">normalized ISO date</text><text x="590" y="465">granter / grantee roles</text><text x="590" y="535">conflicts preserved, none hidden</text><text x="590" y="605">Glasgow City · 55.8642, -4.2518</text></g>
+  <path d="M560 282v28M560 352v28M560 422v28M560 492v28M560 562v28" stroke="#55d6be" stroke-width="2"/>
+
+  <text x="1065" y="245" fill="#55d6be" font-size="15" font-weight="700">STRUCTURED RESULT</text>
+  <text x="1065" y="282" fill="#ffffff" font-size="22" font-weight="700">PropertyRecordExtraction</text>
+  <rect x="1065" y="315" width="330" height="58" rx="12" fill="#174b4c"/><text x="1090" y="351" fill="#baf5e8" font-size="17">overall confidence</text><text x="1365" y="351" text-anchor="end" fill="#ffffff" font-size="21" font-weight="700">0.93</text>
+  <text x="1065" y="415" fill="#b8e9df" font-size="16">document date</text><text x="1065" y="443" fill="#ffffff" font-size="18">12 May 1876</text>
+  <text x="1065" y="485" fill="#b8e9df" font-size="16">parties</text><text x="1065" y="513" fill="#ffffff" font-size="16">John Campbell · granter</text><text x="1065" y="538" fill="#ffffff" font-size="16">Mary Fraser · grantee</text>
+  <text x="1065" y="580" fill="#b8e9df" font-size="16">resolved place</text><text x="1065" y="608" fill="#ffffff" font-size="18">Glasgow · Glasgow City</text>
+  <rect x="1065" y="645" width="330" height="42" rx="10" fill="#d99421"/><text x="1230" y="672" text-anchor="middle" fill="#321d00" font-size="15" font-weight="700">REVIEWABLE · EVIDENCE LINKED</text>
+</g>
+<path d="M470 455h35M990 455h35" stroke="#65d9c2" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+<text x="70" y="780" fill="#7e9ab8" font-family="Arial,sans-serif" font-size="15">Illustrative output based on data/annotations/sample_gold.jsonl and data/gazetteer/sample_scotland_places.csv.</text>
+</svg>
