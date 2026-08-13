@@ -52,45 +52,103 @@ The system keeps multiple candidates instead of silently overwriting conflicts, 
 ### End-to-end flow
 
 ```mermaid
-flowchart LR
-    A[Upload PDF / image] --> B[Validate + persist metadata]
-    B --> C[Render pages]
-    C --> D{Preprocessing enabled?}
-    D -->|yes| E[Grayscale / deskew / denoise]
-    D -->|no| F[Original page images]
-    E --> G[OCR provider]
+flowchart TB
+    subgraph intake["01 · INGEST & PREPARE"]
+        A["Upload PDF or image"] --> B["Validate file<br/>persist metadata"]
+        B --> C["Render pages"]
+        C --> D{"Preprocessing<br/>enabled?"}
+        D -->|"yes"| E["Enhance copies<br/>grayscale · deskew · denoise"]
+        D -->|"no"| F["Use original<br/>page images"]
+    end
+
+    subgraph observe["02 · OBSERVE"]
+        G["OCR provider"] --> H["OCR result<br/>text · tokens · boxes"]
+        H --> I["Regex rules"]
+        H --> J["spaCy NER"]
+    end
+
+    subgraph understand["03 · UNDERSTAND"]
+        K["Schema-constrained<br/>VLM extraction"]
+        L["Candidate merge<br/>preserve conflicts"]
+        M["Evidence + validation"]
+        N["Confidence +<br/>review routing"]
+        I --> L
+        J --> L
+        K --> L
+        L --> M --> N
+    end
+
+    subgraph resolve["04 · RESOLVE & REVIEW"]
+        O["Ranked place<br/>resolver"]
+        P[("SQLite / Postgres")]
+        Q["Streamlit<br/>human review"]
+        R["Append-only<br/>audit log"]
+        O --> P
+        O --> Q --> R
+    end
+
+    E --> G
     F --> G
-    G --> H[OCR text + tokens + boxes]
-    H --> I[Regex rules]
-    H --> J[spaCy NER]
-    H --> K[Schema-constrained VLM]
-    I --> L[Candidate merge]
-    J --> L
-    K --> L
-    L --> M[Evidence + validation]
-    M --> N[Confidence + review routing]
-    N --> O[Ranked place resolver]
-    O --> P[(SQLite / Postgres)]
-    O --> Q[Streamlit human review]
-    Q --> R[Append-only audit log]
+    H --> K
+    N --> O
+
+    classDef input fill:#e8f1ff,stroke:#4b82c3,color:#102a43,stroke-width:2px;
+    classDef process fill:#e8faf5,stroke:#20a47a,color:#103b31,stroke-width:2px;
+    classDef quality fill:#fff4dc,stroke:#d99421,color:#4a2b00,stroke-width:2px;
+    classDef review fill:#f3eaff,stroke:#8957c7,color:#281344,stroke-width:2px;
+    class A,B,C,D,E,F input;
+    class G,H,I,J,K,L process;
+    class M,N,O quality;
+    class P,Q,R review;
 ```
 
 ### Provider boundaries
 
 ```mermaid
-flowchart TB
-    subgraph adapters[Pluggable providers]
-      OCR[OCRProvider<br/>mock or tesseract]
-      NER[NERProvider: spaCy]
-      VLM[StructuredExtractionProvider<br/>mock or Mesh]
-      GEO[PlaceResolver<br/>CSV or future PostGIS]
+flowchart LR
+    CFG["Environment configuration<br/>.env · provider selection"]
+
+    subgraph contracts["Stable application contracts"]
+        PIPE["Pipeline orchestration"]
+        OCRC["OCRProvider"]
+        NERC["NERProvider"]
+        VLMC["StructuredExtractionProvider"]
+        GEOC["PlaceResolver"]
+        OUT["PropertyRecordExtraction"]
+        PIPE --> OCRC
+        PIPE --> NERC
+        PIPE --> VLMC
+        PIPE --> GEOC
+        PIPE --> OUT
     end
-    PIPE[Pipeline orchestration] --> OCR
-    PIPE --> NER
-    PIPE --> VLM
-    PIPE --> GEO
-    CFG[Environment configuration] -. selects .-> adapters
-    PIPE --> OUT[PropertyRecordExtraction]
+
+    subgraph implementations["Replaceable provider implementations"]
+        OCRM["Mock OCR"]
+        OCRT["Tesseract OCR"]
+        NERS["spaCy NER<br/>EntityRuler"]
+        VLMO["Mock structured extraction"]
+        VLMM["Mesh vision-language model"]
+        GEOCSV["CSV gazetteer"]
+        GEOPG["PostGIS resolver<br/>future"]
+    end
+
+    OCRC -. "select one" .-> OCRM
+    OCRC -. "select one" .-> OCRT
+    NERC -. "uses" .-> NERS
+    VLMC -. "select one" .-> VLMO
+    VLMC -. "select one" .-> VLMM
+    GEOC -. "select one" .-> GEOCSV
+    GEOC -. "select one" .-> GEOPG
+    CFG -. "configures" .-> OCRC
+    CFG -. "configures" .-> VLMC
+    CFG -. "configures" .-> GEOC
+
+    classDef contract fill:#e8f1ff,stroke:#3977b8,color:#102a43,stroke-width:2px;
+    classDef implementation fill:#e8faf5,stroke:#20a47a,color:#103b31,stroke-width:2px;
+    classDef config fill:#fff4dc,stroke:#d99421,color:#4a2b00,stroke-width:2px;
+    class PIPE,OCRC,NERC,VLMC,GEOC,OUT contract;
+    class OCRM,OCRT,NERS,VLMO,VLMM,GEOCSV,GEOPG implementation;
+    class CFG config;
 ```
 
 The pipeline depends on interfaces rather than concrete vendors. Local/mock providers are the safe default; real providers can be enabled through environment variables without changing business logic.
