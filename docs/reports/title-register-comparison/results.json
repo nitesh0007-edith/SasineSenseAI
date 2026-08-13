@@ -1,0 +1,847 @@
+{
+  "ocr_only": {
+    "status": "completed",
+    "provider": "tesseract",
+    "pages": 1,
+    "text_characters": 1466,
+    "ocr_text": "Registers Direct - Land Register: View Title\nMID113689\n\nSearch Summary\n\nDate: ‘06/05/2015 Time 44:29:08\nSearch No.t 2015-02060115 User Reference:\n\nSSasine Search Sheet: 181920\n\n‘A. PROPERTY SECTION\n\n‘Title Number: 1M10113689 Date of First Registration: 13/02/2008,\nDate Title Sheet updated —y2y:7/2913 Date Land Certificate updated 32/.2/2013\n\no Interest PROPRIETOR\nNr24738e\n\nDescription:\nSubjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on\nthe Tite Pian; Together withthe rights joint, common, mutual or sole efering tothe subjects\nIn this Tite specified in the Deed of Condition in Entry 2 ofthe Burdens Section.\n\nThis is a Plain Copy which reflects the position at the date the Title Sheet was last\n\nupdated.\nB, PROPRIETORSHIP SECTION\nTitle Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,\nNotes:\n\n1. There are in respect ofthe subjects in this Title no subsisting occupancy rights in terms of\nthe Matrimonial Homes (Family Protection) (Scotland) Act 1981, of spouses of persons who\nwere formerly ented tothe said subjects,\n\n2. There are in respect ofthe subjects inthis Tile no subsisting occupancy rights, in terms of"
+  },
+  "ocr_regex": {
+    "status": "completed",
+    "provider": "tesseract + deterministic rules",
+    "document_type": "title_sheet",
+    "dates": [
+      {
+        "value": "06/05/2015",
+        "normalized_value": "2015-05-06",
+        "confidence": 0.9,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "06/05/2015",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "value": "13/02/2008",
+        "normalized_value": "2008-02-13",
+        "confidence": 0.9,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "13/02/2008",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "value": "12/12/2013",
+        "normalized_value": "2013-12-12",
+        "confidence": 0.9,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "12/12/2013",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "value": "15/11/2013",
+        "normalized_value": "2013-11-15",
+        "confidence": 0.9,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "15/11/2013",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      }
+    ],
+    "money": [
+      {
+        "value": "£190,000",
+        "normalized_value": "£190,000",
+        "confidence": 0.85,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "£190,000",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      }
+    ],
+    "postcodes": [
+      {
+        "value": "EH1 2EL",
+        "normalized_value": "EH1 2EL",
+        "confidence": 0.8,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "EH1 2EL",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      }
+    ],
+    "title_references": [
+      {
+        "value": "MID113689",
+        "normalized_value": "MID113689",
+        "confidence": 0.75,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "MID113689",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      }
+    ],
+    "reference_numbers": []
+  },
+  "ocr_spacy_ner": {
+    "status": "completed",
+    "provider": "tesseract + spaCy",
+    "document_type": "title_sheet",
+    "entities": [
+      {
+        "text": "Registers Direct - Land Register: View Title\nMID113689\n\nSearch Summary\n\nDate: ‘",
+        "label": "ORG",
+        "normalized_text": "Registers Direct - Land Register: View Title\nMID113689\n\nSearch Summary\n\nDate: ‘",
+        "start_char": 0,
+        "end_char": 79,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Registers Direct - Land Register: View Title\nMID113689\n\nSearch Summary\n\nDate: ‘06/05/2015 Time 44:29:08\nSearch No.t 2015-02060115 User Reference:\n\nSSasine Search Sheet: 181920\n\n‘A. PROPERTY SECTION\n\n‘Title Number: 1M10113689 Date of First Registration: 13/02/2008,\n",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "2015-02060115",
+        "label": "DATE",
+        "normalized_text": "2015-02060115",
+        "start_char": 116,
+        "end_char": 129,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Registers Direct - Land Register: View Title\nMID113689\n\nSearch Summary\n\nDate: ‘06/05/2015 Time 44:29:08\nSearch No.t 2015-02060115 User Reference:\n\nSSasine Search Sheet: 181920\n\n‘A. PROPERTY SECTION\n\n‘Title Number: 1M10113689 Date of First Registration: 13/02/2008,\n",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "181920",
+        "label": "DATE",
+        "normalized_text": "181920",
+        "start_char": 169,
+        "end_char": 175,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Registers Direct - Land Register: View Title\nMID113689\n\nSearch Summary\n\nDate: ‘06/05/2015 Time 44:29:08\nSearch No.t 2015-02060115 User Reference:\n\nSSasine Search Sheet: 181920\n\n‘A. PROPERTY SECTION\n\n‘Title Number: 1M10113689 Date of First Registration: 13/02/2008,\n",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "13/02/2008",
+        "label": "DATE",
+        "normalized_text": "13/02/2008",
+        "start_char": 253,
+        "end_char": 263,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Registers Direct - Land Register: View Title\nMID113689\n\nSearch Summary\n\nDate: ‘06/05/2015 Time 44:29:08\nSearch No.t 2015-02060115 User Reference:\n\nSSasine Search Sheet: 181920\n\n‘A. PROPERTY SECTION\n\n‘Title Number: 1M10113689 Date of First Registration: 13/02/2008,\n",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "Date Title Sheet",
+        "label": "ORG",
+        "normalized_text": "Date Title Sheet",
+        "start_char": 265,
+        "end_char": 281,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Date Title Sheet updated —y2y:7/2913",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "Date Land Certificate",
+        "label": "ORG",
+        "normalized_text": "Date Land Certificate",
+        "start_char": 302,
+        "end_char": 323,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Date Land Certificate updated 32/.2/2013\n\no Interest PROPRIETOR\nNr24738e\n\nDescription:\nSubjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on\nthe Tite Pian; Together withthe rights joint, common, mutual or sole efering tothe subjects\nIn this Tite specified in the Deed of Condition in Entry 2 ofthe Burdens Section.\n\n",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "EDINBURGH",
+        "label": "ORG",
+        "normalized_text": "EDINBURGH",
+        "start_char": 427,
+        "end_char": 436,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Date Land Certificate updated 32/.2/2013\n\no Interest PROPRIETOR\nNr24738e\n\nDescription:\nSubjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on\nthe Tite Pian; Together withthe rights joint, common, mutual or sole efering tothe subjects\nIn this Tite specified in the Deed of Condition in Entry 2 ofthe Burdens Section.\n\n",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "the Deed of Condition",
+        "label": "ORG",
+        "normalized_text": "the Deed of Condition",
+        "start_char": 592,
+        "end_char": 613,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Date Land Certificate updated 32/.2/2013\n\no Interest PROPRIETOR\nNr24738e\n\nDescription:\nSubjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on\nthe Tite Pian; Together withthe rights joint, common, mutual or sole efering tothe subjects\nIn this Tite specified in the Deed of Condition in Entry 2 ofthe Burdens Section.\n\n",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "10113689",
+        "label": "DATE",
+        "normalized_text": "10113689",
+        "start_char": 785,
+        "end_char": 793,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "B, PROPRIETORSHIP SECTION\nTitle Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,\nNotes:\n\n1.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "Australia",
+        "label": "GPE",
+        "normalized_text": "Australia",
+        "start_char": 926,
+        "end_char": 935,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "B, PROPRIETORSHIP SECTION\nTitle Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,\nNotes:\n\n1.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "2001",
+        "label": "DATE",
+        "normalized_text": "2001",
+        "start_char": 964,
+        "end_char": 968,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "B, PROPRIETORSHIP SECTION\nTitle Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,\nNotes:\n\n1.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "Anderson",
+        "label": "PERSON",
+        "normalized_text": "Anderson",
+        "start_char": 1019,
+        "end_char": 1027,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "B, PROPRIETORSHIP SECTION\nTitle Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,\nNotes:\n\n1.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "15/11/2013",
+        "label": "DATE",
+        "normalized_text": "15/11/2013",
+        "start_char": 1037,
+        "end_char": 1047,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "B, PROPRIETORSHIP SECTION\nTitle Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,\nNotes:\n\n1.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "Partners Accountants Pty Ltd Level",
+        "label": "ORG",
+        "normalized_text": "Partners Accountants Pty Ltd Level",
+        "start_char": 1048,
+        "end_char": 1082,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "B, PROPRIETORSHIP SECTION\nTitle Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,\nNotes:\n\n1.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "St. Kilda Road",
+        "label": "LOC",
+        "normalized_text": "St. Kilda Road",
+        "start_char": 1090,
+        "end_char": 1104,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "B, PROPRIETORSHIP SECTION\nTitle Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,\nNotes:\n\n1.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "Melbourne",
+        "label": "GPE",
+        "normalized_text": "Melbourne",
+        "start_char": 1106,
+        "end_char": 1115,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "B, PROPRIETORSHIP SECTION\nTitle Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,\nNotes:\n\n1.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "Vic 3004 Australia",
+        "label": "ORG",
+        "normalized_text": "Vic 3004 Australia",
+        "start_char": 1117,
+        "end_char": 1135,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "B, PROPRIETORSHIP SECTION\nTitle Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,\nNotes:\n\n1.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "Title",
+        "label": "PERSON",
+        "normalized_text": "Title",
+        "start_char": 1192,
+        "end_char": 1197,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "There are in respect ofthe subjects in this Title no subsisting occupancy rights in terms of\nthe Matrimonial Homes (Family Protection) (Scotland) Act 1981, of spouses of persons who\nwere formerly ented tothe said subjects,\n\n2.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "Scotland",
+        "label": "GPE",
+        "normalized_text": "Scotland",
+        "start_char": 1284,
+        "end_char": 1292,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "There are in respect ofthe subjects in this Title no subsisting occupancy rights in terms of\nthe Matrimonial Homes (Family Protection) (Scotland) Act 1981, of spouses of persons who\nwere formerly ented tothe said subjects,\n\n2.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "1981",
+        "label": "DATE",
+        "normalized_text": "1981",
+        "start_char": 1298,
+        "end_char": 1302,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "There are in respect ofthe subjects in this Title no subsisting occupancy rights in terms of\nthe Matrimonial Homes (Family Protection) (Scotland) Act 1981, of spouses of persons who\nwere formerly ented tothe said subjects,\n\n2.",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      },
+      {
+        "text": "Tile",
+        "label": "ORG",
+        "normalized_text": "Tile",
+        "start_char": 1418,
+        "end_char": 1422,
+        "confidence": 0.7,
+        "method": "spacy_ner",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "There are in respect ofthe subjects inthis Tile",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      }
+    ]
+  },
+  "labelled_rules": {
+    "status": "completed",
+    "provider": "tesseract + title-sheet rules",
+    "document_type": "title_sheet",
+    "property_description": {
+      "value": "Subjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on the Tite Pian; Together withthe rights joint, common, mutual or sole efering tothe subjects In this Tite specified in the Deed of Condition in Entry 2 ofthe Burdens Section.",
+      "normalized_value": "Subjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on the Tite Pian; Together withthe rights joint, common, mutual or sole efering tothe subjects In this Tite specified in the Deed of Condition in Entry 2 ofthe Burdens Section.",
+      "confidence": 0.72,
+      "method": "labelled_regex",
+      "evidence": [
+        {
+          "page": 1,
+          "text": "Description:\nSubjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on\nthe Tite Pian; Together withthe rights joint, common, mutual or sole efering tothe subjects\nIn this Tite specified in the Deed of Condition in Entry 2 ofthe Burdens Section.",
+          "bbox": null,
+          "source": "ocr_text"
+        }
+      ]
+    },
+    "proprietor": {
+      "value": "DAT LYNCH INVESTMENTS PTY LTD",
+      "normalized_value": "DAT LYNCH INVESTMENTS PTY LTD",
+      "confidence": 0.62,
+      "method": "labelled_regex",
+      "evidence": [
+        {
+          "page": 1,
+          "text": "Title Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,",
+          "bbox": null,
+          "source": "ocr_text"
+        }
+      ]
+    },
+    "map_references": []
+  },
+  "hybrid_local": {
+    "status": "completed",
+    "provider": "tesseract + rules + spaCy + local hybrid",
+    "document_id": "real_sample_hybrid",
+    "document_type": "title_sheet",
+    "document_date": null,
+    "registration_dates": [
+      {
+        "name": "registration_date",
+        "value": "06/05/2015",
+        "normalized_value": "2015-05-06",
+        "confidence": 0.78,
+        "method": "labelled_regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Search Summary\n\nDate: ‘06/05/2015",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ],
+        "validation": null
+      },
+      {
+        "name": "registration_date",
+        "value": "13/02/2008",
+        "normalized_value": "2008-02-13",
+        "confidence": 0.78,
+        "method": "labelled_regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Date of First Registration: 13/02/2008",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ],
+        "validation": null
+      },
+      {
+        "name": "title_sheet_date",
+        "value": "12/12/2013",
+        "normalized_value": "2013-12-12",
+        "confidence": 0.55,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "12/12/2013",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ],
+        "validation": null
+      },
+      {
+        "name": "title_sheet_date",
+        "value": "15/11/2013",
+        "normalized_value": "2013-11-15",
+        "confidence": 0.55,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "15/11/2013",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ],
+        "validation": null
+      }
+    ],
+    "parties": [
+      {
+        "name": "DAT LYNCH INVESTMENTS PTY LTD",
+        "role": "owner",
+        "confidence": 0.62,
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Title Number: 10113689\nEntry Dateof — raorietor = Date of\nNumber Registration Proprie ‘Senet Entry\nDAT LYNCH INVESTMENTS PTY\nLTD a Company incorporated in\nAustralia under the Corporations\n‘Act 2001 and having their\n1 12/12/2013 Registered Omnce ae Anderson £190,000 15/11/2013\nPartners Accountants Pty Ltd Level\n6, 484 St. Kilda Road, Melbourne,\nVic 3004 Australia,",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ]
+      }
+    ],
+    "property_description": {
+      "name": "property_description",
+      "value": "Subjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on the Tite Pian; Together withthe rights joint, common, mutual or sole efering tothe subjects In this Tite specified in the Deed of Condition in Entry 2 ofthe Burdens Section.",
+      "normalized_value": "Subjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on the Tite Pian; Together withthe rights joint, common, mutual or sole efering tothe subjects In this Tite specified in the Deed of Condition in Entry 2 ofthe Burdens Section.",
+      "confidence": 0.72,
+      "method": "labelled_regex",
+      "evidence": [
+        {
+          "page": 1,
+          "text": "Description:\nSubjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on\nthe Tite Pian; Together withthe rights joint, common, mutual or sole efering tothe subjects\nIn this Tite specified in the Deed of Condition in Entry 2 ofthe Burdens Section.",
+          "bbox": null,
+          "source": "ocr_text"
+        }
+      ],
+      "validation": null
+    },
+    "consideration": {
+      "name": "consideration",
+      "value": "£190,000",
+      "normalized_value": "£190,000",
+      "confidence": 0.85,
+      "method": "regex",
+      "evidence": [
+        {
+          "page": 1,
+          "text": "£190,000",
+          "bbox": null,
+          "source": "ocr_text"
+        }
+      ],
+      "validation": null
+    },
+    "places": [],
+    "rights": [],
+    "burdens": [],
+    "servitudes": [],
+    "title_references": [
+      {
+        "name": "title_reference",
+        "value": "MID113689",
+        "normalized_value": "MID113689",
+        "confidence": 0.75,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "MID113689",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ],
+        "validation": null
+      }
+    ],
+    "map_references": [
+      {
+        "name": "map_reference",
+        "value": "NT2473SE",
+        "normalized_value": "NT2473SE",
+        "confidence": 0.78,
+        "method": "labelled_crop_ocr",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Map Reference: NT2473SE",
+            "bbox": null,
+            "source": "title_sheet_crop_ocr"
+          }
+        ],
+        "validation": null
+      }
+    ],
+    "source_pages": [
+      1
+    ],
+    "review_required": true,
+    "overall_confidence": 0.7075,
+    "created_at": "2026-08-13T23:55:23.001247Z",
+    "metadata": {
+      "provider": "mock",
+      "warning": "Mock provider has no supported structured result for this OCR text.",
+      "ocr_provider": "tesseract",
+      "ner_provider": "spacy",
+      "structured_provider": "mock",
+      "preprocess_operations": [],
+      "review_tier": "quick_review",
+      "entity_candidate_count": 21,
+      "date_candidates": [
+        {
+          "name": "document_date",
+          "value": "06/05/2015",
+          "normalized_value": "2015-05-06",
+          "confidence": 0.9,
+          "method": "regex",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "06/05/2015",
+              "bbox": null,
+              "source": "ocr_text"
+            }
+          ],
+          "validation": null
+        },
+        {
+          "name": "document_date",
+          "value": "13/02/2008",
+          "normalized_value": "2008-02-13",
+          "confidence": 0.9,
+          "method": "regex",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "13/02/2008",
+              "bbox": null,
+              "source": "ocr_text"
+            }
+          ],
+          "validation": null
+        },
+        {
+          "name": "document_date",
+          "value": "12/12/2013",
+          "normalized_value": "2013-12-12",
+          "confidence": 0.9,
+          "method": "regex",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "12/12/2013",
+              "bbox": null,
+              "source": "ocr_text"
+            }
+          ],
+          "validation": null
+        },
+        {
+          "name": "document_date",
+          "value": "15/11/2013",
+          "normalized_value": "2013-11-15",
+          "confidence": 0.9,
+          "method": "regex",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "15/11/2013",
+              "bbox": null,
+              "source": "ocr_text"
+            }
+          ],
+          "validation": null
+        }
+      ],
+      "date_conflict": true,
+      "regex_candidates": {
+        "money": [
+          {
+            "name": "money",
+            "value": "£190,000",
+            "normalized_value": "£190,000",
+            "confidence": 0.85,
+            "method": "regex",
+            "evidence": [
+              {
+                "page": 1,
+                "text": "£190,000",
+                "bbox": null,
+                "source": "ocr_text"
+              }
+            ],
+            "validation": null
+          }
+        ],
+        "postcodes": [
+          {
+            "name": "postcode",
+            "value": "EH1 2EL",
+            "normalized_value": "EH1 2EL",
+            "confidence": 0.8,
+            "method": "regex",
+            "evidence": [
+              {
+                "page": 1,
+                "text": "EH1 2EL",
+                "bbox": null,
+                "source": "ocr_text"
+              }
+            ],
+            "validation": null
+          }
+        ],
+        "title_references": [
+          {
+            "name": "title_reference",
+            "value": "MID113689",
+            "normalized_value": "MID113689",
+            "confidence": 0.75,
+            "method": "regex",
+            "evidence": [
+              {
+                "page": 1,
+                "text": "MID113689",
+                "bbox": null,
+                "source": "ocr_text"
+              }
+            ],
+            "validation": null
+          }
+        ],
+        "reference_numbers": []
+      },
+      "map_reference_candidates": [
+        {
+          "name": "map_reference",
+          "value": "NT2473SE",
+          "normalized_value": "NT2473SE",
+          "confidence": 0.78,
+          "method": "labelled_crop_ocr",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "Map Reference: NT2473SE",
+              "bbox": null,
+              "source": "title_sheet_crop_ocr"
+            }
+          ],
+          "validation": null
+        }
+      ]
+    }
+  },
+  "mesh_vlm": {
+    "status": "not_run",
+    "provider": "Mesh VLM",
+    "message": "Use --mesh with configured Mesh credentials."
+  },
+  "vllm": {
+    "status": "not_configured",
+    "provider": "vLLM",
+    "message": "Endpoint and model were not supplied."
+  }
+}

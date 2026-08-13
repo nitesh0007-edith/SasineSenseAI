@@ -234,6 +234,42 @@ The application deliberately keeps `review_required: true`: extracted values
 assist research and triage, but they are not authoritative proof of ownership,
 title or legal rights.
 
+### Same document through every available method
+
+The real sample was also passed through the local comparison runner so the
+outputs can be inspected side by side. The full machine-readable record is in
+[`docs/reports/title-register-comparison/results.json`](docs/reports/title-register-comparison/results.json), with a human-readable summary in [`docs/reports/title-register-comparison/README.md`](docs/reports/title-register-comparison/README.md).
+
+| Method | What it returned on the sample | Status |
+| --- | --- | :---: |
+| Tesseract OCR only | Raw page text and OCR character count | ✅ |
+| Tesseract + regex | Document type, dates, money, postcode and `MID113689` | ✅ |
+| Tesseract + spaCy NER | PERSON/ORG/GPE/LOC candidates | ✅ |
+| Labelled title-sheet rules | Property description, proprietor and map-field candidates | ✅ |
+| Local hybrid | Full evidence-preserving structured result | ✅ |
+| Mesh/VLM | Optional; requires configured credentials and `--mesh` | Not run |
+| vLLM | Optional; requires an OpenAI-compatible endpoint and model | Not configured |
+
+Run the same comparison yourself:
+
+```bash
+python -m app.eval.real_sample \
+  --input docs/assets/title-register-sample.jpg \
+  --out docs/reports/title-register-comparison
+```
+
+For a local vLLM server exposing `/v1/models`:
+
+```bash
+python -m app.eval.real_sample \
+  --input docs/assets/title-register-sample.jpg \
+  --vllm-base-url http://127.0.0.1:8000/v1 \
+  --vllm-model your-vision-model
+```
+
+The comparison records unavailable systems explicitly. A missing Mesh/vLLM
+endpoint is never presented as a successful extraction.
+
 ### Sample data to structured result
 
 The repository includes a small gold annotation and Scotland gazetteer fixture. The following visual shows how that sample record is represented as a reviewable structured result with evidence, confidence and a resolved place.
