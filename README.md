@@ -80,10 +80,10 @@ flowchart LR
 ```mermaid
 flowchart TB
     subgraph adapters[Pluggable providers]
-      OCR[OCRProvider: mock | tesseract]
+      OCR[OCRProvider<br/>mock or tesseract]
       NER[NERProvider: spaCy]
-      VLM[StructuredExtractionProvider: mock | Mesh]
-      GEO[PlaceResolver: CSV | future PostGIS]
+      VLM[StructuredExtractionProvider<br/>mock or Mesh]
+      GEO[PlaceResolver<br/>CSV or future PostGIS]
     end
     PIPE[Pipeline orchestration] --> OCR
     PIPE --> NER
