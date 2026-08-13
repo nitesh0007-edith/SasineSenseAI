@@ -6,10 +6,12 @@ field. Reviewer actions are posted to the append-only audit log via the API;
 history is never deleted. Outputs are non-authoritative and require review.
 """
 
+import os
+
 import requests
 import streamlit as st
 
-API = "http://localhost:8000"
+API = os.getenv("REVIEWER_API_URL", "http://localhost:8000").rstrip("/")
 
 st.set_page_config(page_title="Property Record Reviewer", layout="wide")
 st.title("AI-Assisted Property Record Reviewer")
@@ -80,7 +82,8 @@ if uploaded:
                 st.subheader("Document")
                 st.write(uploaded.name)
                 if uploaded.type and uploaded.type.startswith("image/"):
-                    st.image(uploaded.getvalue(), use_container_width=True)
+                    # Keep compatibility with older Streamlit releases.
+                    st.image(uploaded.getvalue())
 
             with col2:
                 st.subheader("Structured extraction")

@@ -24,6 +24,23 @@ class MockStructuredExtractionProvider:
         page = ocr_pages[0].page if ocr_pages else 1
         text = ocr_pages[0].text if ocr_pages else ""
 
+        # The mock provider is a deterministic fixture for tests/evaluation. It
+        # must not pretend that arbitrary uploaded images contain the fixture
+        # record. Return an empty, review-required result for other OCR text.
+        fixture_markers = ("12 May 1876", "John Campbell", "Mary Fraser", "Glasgow")
+        if not all(marker.casefold() in text.casefold() for marker in fixture_markers):
+            return PropertyRecordExtraction(
+                document_id=document_id,
+                document_type="unknown",
+                source_pages=[page],
+                review_required=True,
+                overall_confidence=0.0,
+                metadata={
+                    "provider": self.name,
+                    "warning": "Mock provider has no supported structured result for this OCR text.",
+                },
+            )
+
         evidence = EvidenceSpan(
             page=page,
             text=text,
