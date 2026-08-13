@@ -15,6 +15,9 @@ DATE_PATTERNS = [
         re.I,
     ),
 ]
+NUMERIC_DATE_PATTERN = re.compile(
+    r"\b(?P<day>\d{1,2})/(?P<month>\d{1,2})/(?P<year>\d{4})\b"
+)
 
 MONTHS = {
     "jan": 1,
@@ -125,6 +128,28 @@ def extract_dates(page: OCRPageResult) -> list[ExtractedField]:
                     ],
                 )
             )
+    for match in NUMERIC_DATE_PATTERN.finditer(page.text):
+        raw = match.group(0)
+        try:
+            parsed = date(
+                int(match.group("year")),
+                int(match.group("month")),
+                int(match.group("day")),
+            )
+        except ValueError:
+            parsed = None
+        results.append(
+            ExtractedField(
+                name="document_date",
+                value=raw,
+                normalized_value=parsed.isoformat() if parsed else None,
+                confidence=0.90 if parsed else 0.60,
+                method="regex",
+                evidence=[
+                    EvidenceSpan(page=page.page, text=raw, bbox=None, source="ocr_text")
+                ],
+            )
+        )
     return results
 
 
@@ -175,6 +200,15 @@ def extract_postcodes(page: OCRPageResult) -> list[ExtractedField]:
 def extract_title_references(page: OCRPageResult) -> list[ExtractedField]:
     return _fields_from_pattern(
         page, TITLE_REF_PATTERN, name="title_reference", confidence=0.75
+    )
+
+
+MAP_REFERENCE_PATTERN = re.compile(r"\b[A-Z]{2}\d{4}[A-Z]{2}\b", re.I)
+
+
+def extract_map_references(page: OCRPageResult) -> list[ExtractedField]:
+    return _fields_from_pattern(
+        page, MAP_REFERENCE_PATTERN, name="map_reference", confidence=0.75
     )
 
 

@@ -14,7 +14,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from app.core.config import settings
-from app.models.schemas import PropertyRecordExtraction
+from app.models.schemas import Party, PlaceCandidate, PropertyRecordExtraction
 from app.providers.factory import (
     get_ner_provider,
     get_ocr_provider,
@@ -24,7 +24,7 @@ from app.providers.factory import (
 from app.services.merge import merge_field_candidates
 from app.services.preprocessing import PreprocessConfig, preprocess_image
 from app.services.rendering import render_document
-from app.services.rules import classify_document_type, extract_all
+from app.services.rules import classify_document_type, extract_all, extract_map_references
 from app.services.validation import (
     compute_confidence,
     review_required,
@@ -81,6 +81,7 @@ def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
     merged_date = merge_field_candidates("document_date", date_candidates)
 
     review_flags: list[bool] = []
+    resolver = get_place_resolver()
     if merged_date.chosen is not None:
         chosen = merged_date.chosen
         validation = validate_field(chosen)
@@ -98,8 +99,47 @@ def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
         result.document_date = chosen
         review_flags.append(review_required(confidence))
 
+    # Promote deterministic candidates into the structured result when the
+    # configured structured provider has no value. This keeps title-register
+    # outputs useful even without a VLM, while retaining evidence and review.
+    flat_regex = {
+        key: [field for page in regex_by_page for field in page[key]]
+        for key in ("money", "postcodes", "title_references", "reference_numbers")
+    }
+    map_candidates = [extract_map_references(page) for page in ocr_pages]
+    flat_map_references = [field for page in map_candidates for field in page]
+    if not result.title_references:
+        result.title_references = flat_regex["title_references"]
+    if not result.map_references:
+        result.map_references = flat_map_references
+
+    if not result.parties and deterministic_type != "title_sheet":
+        for entity in entity_candidates:
+            if entity.label not in {"PERSON", "ORG"}:
+                continue
+            result.parties.append(
+                Party(
+                    name=entity.text,
+                    role="owner" if deterministic_type == "title_sheet" else "unknown",
+                    confidence=entity.confidence,
+                    evidence=entity.evidence,
+                )
+            )
+    if not result.places:
+        for entity in entity_candidates:
+            if entity.label not in {"GPE", "LOC"}:
+                continue
+            if not resolver.resolve(entity.text, limit=1):
+                continue
+            result.places.append(
+                PlaceCandidate(
+                    name=entity.text,
+                    confidence=entity.confidence,
+                    evidence=entity.evidence,
+                )
+            )
+
     # Phase 9 — resolve places against the local gazetteer (ranked, non-forcing).
-    resolver = get_place_resolver()
     for place in result.places:
         matches = resolver.resolve(place.name, limit=3)
         if matches:
@@ -114,6 +154,8 @@ def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
     # Aggregate confidence + review routing (Phase 8).
     field_confidences = [p.confidence for p in result.parties]
     field_confidences += [p.confidence for p in result.places]
+    field_confidences += [p.confidence for p in result.title_references]
+    field_confidences += [p.confidence for p in result.map_references]
     if result.document_date is not None:
         field_confidences.append(result.document_date.confidence)
     overall = round(sum(field_confidences) / len(field_confidences), 4) if field_confidences else 0.0
@@ -136,6 +178,9 @@ def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
                 key: [f.model_dump(mode="json") for page in regex_by_page for f in page[key]]
                 for key in ("money", "postcodes", "title_references", "reference_numbers")
             },
+            "map_reference_candidates": [
+                f.model_dump(mode="json") for f in flat_map_references
+            ],
         }
     )
 
