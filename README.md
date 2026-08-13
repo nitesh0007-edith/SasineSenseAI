@@ -177,6 +177,12 @@ Every field is represented as an evidence-bearing candidate. A simplified exampl
 
 The top-level extraction includes document type/date, parties, property description, places, rights, burdens, servitudes, title references, map references, source pages, review state and metadata about every provider used.
 
+### Sample data to structured result
+
+The repository includes a small gold annotation and Scotland gazetteer fixture. The following visual shows how that sample record is represented as a reviewable structured result with evidence, confidence and a resolved place.
+
+![Sample annotation transformed into a structured result](docs/structured-result-example.svg)
+
 ## Quick start
 
 ### Install
@@ -288,7 +294,6 @@ tests/            unit and integration tests
 
 - See [`docs/RESEARCH_PLAN.md`](docs/RESEARCH_PLAN.md) for hypotheses and evaluation design.
 - See [`docs/ANNOTATION_GUIDE.md`](docs/ANNOTATION_GUIDE.md) for gold-label conventions.
-- See [`CODEX_TASKS.md`](CODEX_TASKS.md) for the incremental implementation plan.
 - Do not upload confidential or copyrighted records without the necessary rights.
 - Do not treat generated output as legal advice or proof of ownership.
 - Keep secrets in a local `.env`; `.gitignore` excludes credentials, uploads, derived data and databases.
