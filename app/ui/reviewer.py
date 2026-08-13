@@ -77,7 +77,15 @@ def _inject_styles() -> None:
         .small-note { color:var(--muted); font-size:12px; line-height:1.5; }
         .footer-note { color:#8ba0b1; text-align:center; font-size:11px; margin-top:40px; }
         .stButton > button { border-radius:10px; font-weight:700; border:1px solid #c7dbe5; }
-        .stButton > button[kind="primary"] { background:#167c68; border-color:#167c68; }
+        .stButton > button { color:#102a43 !important; background:#ffffff !important; }
+        .stButton > button:hover { color:#102a43 !important; background:#eaf7f4 !important; border-color:#55d6be !important; }
+        .stButton > button[kind="primary"] { color:#ffffff !important; background:#167c68 !important; border-color:#167c68 !important; }
+        .stButton > button[kind="primary"]:hover { color:#ffffff !important; background:#116b5a !important; }
+        .stTextInput input, .stTextArea textarea { color:#102a43 !important; background:#ffffff !important; border-color:#c7dbe5 !important; }
+        .stTextInput input::placeholder, .stTextArea textarea::placeholder { color:#7890a2 !important; }
+        [data-testid="stExpander"] summary { color:#102a43 !important; }
+        [data-testid="stAlert"] { color:#614400 !important; }
+        [data-testid="stAlert"] p { color:#614400 !important; }
         div[data-testid="stMetric"] { background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; }
         </style>
         """,
