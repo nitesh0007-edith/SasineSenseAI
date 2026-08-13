@@ -33,6 +33,20 @@ from app.services.validation import (
 )
 
 
+def _dedupe_fields(fields):
+    """Collapse repeated OCR matches while retaining all evidence spans."""
+    by_value = {}
+    for field in fields:
+        key = str(field.normalized_value or field.value).strip().casefold()
+        existing = by_value.get(key)
+        if existing is None:
+            by_value[key] = field
+            continue
+        evidence = existing.evidence + [span for span in field.evidence if span not in existing.evidence]
+        by_value[key] = existing.model_copy(update={"evidence": evidence})
+    return list(by_value.values())
+
+
 def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
     path = Path(local_path)
     rendered_pages = render_document(path, document_id=document_id)
@@ -76,13 +90,20 @@ def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
 
     # Phase 6.2 — merge date candidates from regex and the structured provider.
     date_candidates = [c for page in regex_by_page for c in page["dates"]]
-    if result.document_date is not None:
-        date_candidates.append(result.document_date)
+    structured_date = result.document_date
+    if structured_date is not None:
+        date_candidates.append(structured_date)
     merged_date = merge_field_candidates("document_date", date_candidates)
 
     review_flags: list[bool] = []
     resolver = get_place_resolver()
-    if merged_date.chosen is not None:
+    # A title register commonly contains search, registration, update and entry
+    # dates. Without a field label, selecting one as the document date is unsafe.
+    if merged_date.chosen is not None and not (
+        deterministic_type == "title_sheet"
+        and merged_date.conflict
+        and structured_date is None
+    ):
         chosen = merged_date.chosen
         validation = validate_field(chosen)
         best_ocr = max(
@@ -109,9 +130,9 @@ def run_pipeline(document_id: str, local_path: str) -> PropertyRecordExtraction:
     map_candidates = [extract_map_references(page) for page in ocr_pages]
     flat_map_references = [field for page in map_candidates for field in page]
     if not result.title_references:
-        result.title_references = flat_regex["title_references"]
+        result.title_references = _dedupe_fields(flat_regex["title_references"])
     if not result.map_references:
-        result.map_references = flat_map_references
+        result.map_references = _dedupe_fields(flat_map_references)
 
     if not result.parties and deterministic_type != "title_sheet":
         for entity in entity_candidates:
