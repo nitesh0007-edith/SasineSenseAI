@@ -680,7 +680,7 @@
     ],
     "review_required": true,
     "overall_confidence": 0.7075,
-    "created_at": "2026-08-13T23:55:23.001247Z",
+    "created_at": "2026-08-14T00:01:45.140165Z",
     "metadata": {
       "provider": "mock",
       "warning": "Mock provider has no supported structured result for this OCR text.",
@@ -835,9 +835,416 @@
     }
   },
   "mesh_vlm": {
-    "status": "not_run",
-    "provider": "Mesh VLM",
-    "message": "Use --mesh with configured Mesh credentials."
+    "status": "completed",
+    "provider": "Tesseract + Mesh VLM + local validation",
+    "document_id": "real_sample_mesh",
+    "document_type": "title_sheet",
+    "document_date": {
+      "name": "document_date",
+      "value": "12/12/2013",
+      "normalized_value": "2013-12-12",
+      "confidence": 0.8675,
+      "method": "regex",
+      "evidence": [
+        {
+          "page": 1,
+          "text": "12/12/2013",
+          "bbox": null,
+          "source": "ocr_text"
+        }
+      ],
+      "validation": {
+        "status": "passed",
+        "rules": [
+          "non_empty",
+          "evidence_supported",
+          "date_parseable"
+        ],
+        "notes": []
+      }
+    },
+    "registration_dates": [
+      {
+        "name": "registration_date",
+        "value": "06/05/2015",
+        "normalized_value": "2015-05-06",
+        "confidence": 0.78,
+        "method": "labelled_regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Search Summary\n\nDate: ‘06/05/2015",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ],
+        "validation": null
+      },
+      {
+        "name": "registration_date",
+        "value": "13/02/2008",
+        "normalized_value": "2008-02-13",
+        "confidence": 0.78,
+        "method": "labelled_regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Date of First Registration: 13/02/2008",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ],
+        "validation": null
+      },
+      {
+        "name": "title_sheet_date",
+        "value": "12/12/2013",
+        "normalized_value": "2013-12-12",
+        "confidence": 0.55,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "12/12/2013",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ],
+        "validation": null
+      },
+      {
+        "name": "title_sheet_date",
+        "value": "15/11/2013",
+        "normalized_value": "2013-11-15",
+        "confidence": 0.55,
+        "method": "regex",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "15/11/2013",
+            "bbox": null,
+            "source": "ocr_text"
+          }
+        ],
+        "validation": null
+      }
+    ],
+    "parties": [
+      {
+        "name": "D & T LYNCH INVESTMENTS PTY LTD",
+        "role": "owner",
+        "confidence": 0.6,
+        "evidence": [
+          {
+            "page": 1,
+            "text": "D & T LYNCH INVESTMENTS PTY LTD a Company incorporated in Australia under the Corporations Act 2001 and having their Registered Office at Anderson Partners Accountants Pty Ltd Level 6, 484 St. Kilda Road, Melbourne, Vic 3004 Australia.",
+            "bbox": null,
+            "source": "mesh_vlm"
+          }
+        ]
+      }
+    ],
+    "property_description": {
+      "name": "property_description",
+      "value": "Subjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on the Title Plan; Together with the rights joint, common, mutual or sole effeiring to the subjects in this Title specified in the Deed of Conditions in Entry 2 of the Burdens Section.",
+      "normalized_value": null,
+      "confidence": 0.5,
+      "method": "mesh_vlm",
+      "evidence": [
+        {
+          "page": 1,
+          "text": "Subjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on the Title Plan; Together with the rights joint, common, mutual or sole effeiring to the subjects in this Title specified in the Deed of Conditions in Entry 2 of the Burdens Section.",
+          "bbox": null,
+          "source": "mesh_vlm"
+        }
+      ],
+      "validation": null
+    },
+    "consideration": {
+      "name": "consideration",
+      "value": "£190,000",
+      "normalized_value": null,
+      "confidence": 0.5,
+      "method": "mesh_vlm",
+      "evidence": [
+        {
+          "page": 1,
+          "text": "£190,000",
+          "bbox": null,
+          "source": "mesh_vlm"
+        }
+      ],
+      "validation": null
+    },
+    "places": [
+      {
+        "name": "27 CASTLE TERRACE, EDINBURGH EH1 2EL",
+        "normalized_name": "Edinburgh",
+        "admin_area": "City of Edinburgh",
+        "latitude": 55.9533,
+        "longitude": -3.1883,
+        "confidence": 0.6,
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Subjects FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL within the land edged red on the Title Plan",
+            "bbox": null,
+            "source": "mesh_vlm"
+          }
+        ]
+      },
+      {
+        "name": "Melbourne, Vic 3004 Australia",
+        "normalized_name": null,
+        "admin_area": null,
+        "latitude": null,
+        "longitude": null,
+        "confidence": 0.6,
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Registered Office at Anderson Partners Accountants Pty Ltd Level 6, 484 St. Kilda Road, Melbourne, Vic 3004 Australia.",
+            "bbox": null,
+            "source": "mesh_vlm"
+          }
+        ]
+      }
+    ],
+    "rights": [],
+    "burdens": [],
+    "servitudes": [],
+    "title_references": [
+      {
+        "name": "title_reference",
+        "value": "MID113689",
+        "normalized_value": null,
+        "confidence": 0.5,
+        "method": "mesh_vlm",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Title Number: MID113689",
+            "bbox": null,
+            "source": "mesh_vlm"
+          }
+        ],
+        "validation": null
+      },
+      {
+        "name": "title_reference",
+        "value": "Sasine Search Sheet: 181920",
+        "normalized_value": null,
+        "confidence": 0.5,
+        "method": "mesh_vlm",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Sasine Search Sheet: 181920",
+            "bbox": null,
+            "source": "mesh_vlm"
+          }
+        ],
+        "validation": null
+      }
+    ],
+    "map_references": [
+      {
+        "name": "map_reference",
+        "value": "NT2473SE",
+        "normalized_value": "NT2473SE",
+        "confidence": 0.78,
+        "method": "labelled_crop_ocr",
+        "evidence": [
+          {
+            "page": 1,
+            "text": "Map Reference: NT2473SE",
+            "bbox": null,
+            "source": "title_sheet_crop_ocr"
+          }
+        ],
+        "validation": null
+      }
+    ],
+    "source_pages": [
+      1
+    ],
+    "review_required": true,
+    "overall_confidence": 0.634,
+    "created_at": "2026-08-14T00:02:00.762393Z",
+    "metadata": {
+      "provider": "mesh",
+      "model": "anthropic/claude-sonnet-5",
+      "response_id": "chatcmpl-019ffd935da57660a586",
+      "usage": {
+        "prompt_tokens": 1565,
+        "completion_tokens": 851,
+        "total_tokens": 2416
+      },
+      "ocr_provider": "tesseract",
+      "ner_provider": "spacy",
+      "structured_provider": "mesh",
+      "preprocess_operations": [],
+      "review_tier": "manual_review",
+      "entity_candidate_count": 21,
+      "date_candidates": [
+        {
+          "name": "document_date",
+          "value": "06/05/2015",
+          "normalized_value": "2015-05-06",
+          "confidence": 0.9,
+          "method": "regex",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "06/05/2015",
+              "bbox": null,
+              "source": "ocr_text"
+            }
+          ],
+          "validation": null
+        },
+        {
+          "name": "document_date",
+          "value": "13/02/2008",
+          "normalized_value": "2008-02-13",
+          "confidence": 0.9,
+          "method": "regex",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "13/02/2008",
+              "bbox": null,
+              "source": "ocr_text"
+            }
+          ],
+          "validation": null
+        },
+        {
+          "name": "document_date",
+          "value": "12/12/2013",
+          "normalized_value": "2013-12-12",
+          "confidence": 0.9,
+          "method": "regex",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "12/12/2013",
+              "bbox": null,
+              "source": "ocr_text"
+            }
+          ],
+          "validation": null
+        },
+        {
+          "name": "document_date",
+          "value": "15/11/2013",
+          "normalized_value": "2013-11-15",
+          "confidence": 0.9,
+          "method": "regex",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "15/11/2013",
+              "bbox": null,
+              "source": "ocr_text"
+            }
+          ],
+          "validation": null
+        },
+        {
+          "name": "document_date",
+          "value": "12/12/2013",
+          "normalized_value": "2013-12-12",
+          "confidence": 0.6,
+          "method": "mesh_vlm",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "Date Title Sheet updated to: 12/12/2013",
+              "bbox": null,
+              "source": "mesh_vlm"
+            }
+          ],
+          "validation": null
+        }
+      ],
+      "date_conflict": true,
+      "regex_candidates": {
+        "money": [
+          {
+            "name": "money",
+            "value": "£190,000",
+            "normalized_value": "£190,000",
+            "confidence": 0.85,
+            "method": "regex",
+            "evidence": [
+              {
+                "page": 1,
+                "text": "£190,000",
+                "bbox": null,
+                "source": "ocr_text"
+              }
+            ],
+            "validation": null
+          }
+        ],
+        "postcodes": [
+          {
+            "name": "postcode",
+            "value": "EH1 2EL",
+            "normalized_value": "EH1 2EL",
+            "confidence": 0.8,
+            "method": "regex",
+            "evidence": [
+              {
+                "page": 1,
+                "text": "EH1 2EL",
+                "bbox": null,
+                "source": "ocr_text"
+              }
+            ],
+            "validation": null
+          }
+        ],
+        "title_references": [
+          {
+            "name": "title_reference",
+            "value": "MID113689",
+            "normalized_value": "MID113689",
+            "confidence": 0.75,
+            "method": "regex",
+            "evidence": [
+              {
+                "page": 1,
+                "text": "MID113689",
+                "bbox": null,
+                "source": "ocr_text"
+              }
+            ],
+            "validation": null
+          }
+        ],
+        "reference_numbers": []
+      },
+      "map_reference_candidates": [
+        {
+          "name": "map_reference",
+          "value": "NT2473SE",
+          "normalized_value": "NT2473SE",
+          "confidence": 0.78,
+          "method": "labelled_crop_ocr",
+          "evidence": [
+            {
+              "page": 1,
+              "text": "Map Reference: NT2473SE",
+              "bbox": null,
+              "source": "title_sheet_crop_ocr"
+            }
+          ],
+          "validation": null
+        }
+      ]
+    }
   },
   "vllm": {
     "status": "not_configured",

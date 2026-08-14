@@ -247,7 +247,7 @@ outputs can be inspected side by side. The full machine-readable record is in
 | Tesseract + spaCy NER | PERSON/ORG/GPE/LOC candidates | ✅ |
 | Labelled title-sheet rules | Property description, proprietor and map-field candidates | ✅ |
 | Local hybrid | Full evidence-preserving structured result | ✅ |
-| Mesh/VLM | Optional; requires configured credentials and `--mesh` | Not run |
+| Mesh/VLM | Title sheet, owner, description, consideration, references and places | ✅ |
 | vLLM | Optional; requires an OpenAI-compatible endpoint and model | Not configured |
 
 Run the same comparison yourself:
@@ -269,6 +269,25 @@ python -m app.eval.real_sample \
 
 The comparison records unavailable systems explicitly. A missing Mesh/vLLM
 endpoint is never presented as a successful extraction.
+
+The live Mesh run on this sample used `anthropic/claude-sonnet-5` and returned:
+
+| Mesh field | Output |
+| --- | --- |
+| Document type | `title_sheet` |
+| Document date candidate | `12/12/2013` |
+| Proprietor | `D & T LYNCH INVESTMENTS PTY LTD` |
+| Property description | `FLAT 2 at 27 CASTLE TERRACE, EDINBURGH EH1 2EL ...` |
+| Consideration | `£190,000` |
+| Title references | `MID113689`, `Sasine Search Sheet: 181920` |
+| Places | `27 CASTLE TERRACE, EDINBURGH EH1 2EL`; `Melbourne, Vic 3004 Australia` |
+| Review state | Required; overall confidence `0.634` |
+
+The differences are useful: deterministic rules recovered the exact small-print
+map reference `NT2473SE`, while Mesh supplied a richer semantic description and
+owner interpretation. Mesh also returned an unrelated registered-office place,
+which is why the result remains review-required rather than being treated as
+authoritative.
 
 ### Sample data to structured result
 
